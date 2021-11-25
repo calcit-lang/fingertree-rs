@@ -37,43 +37,47 @@ where
         }
     }
 
-    pub(crate) fn split_left<F>(&self, mut measure: V::Measure, pred: &mut F) -> &[V]
+    pub(crate) fn split_left<F>(&self, mut measure: V::Measure, pred: &mut F) -> (&[V], &V)
     where
         F: FnMut(&V::Measure) -> bool,
     {
         let slice = self.as_ref();
         if slice.len() == 1 {
-            &[]
+            (&[], &slice[0])
         } else {
             let slice = self.as_ref();
             for (index, item) in slice.iter().enumerate() {
                 measure = measure.join(&item.measure());
                 if pred(&measure) {
-                    return &slice[..index];
+                    return (&slice[..index], &slice[index]);
                 }
             }
             let index = slice.len() - 1;
-            &slice[..index]
+            (&slice[..index], &slice[index])
         }
     }
 
-    pub(crate) fn split_right<F>(&self, mut measure: V::Measure, pred: &mut F) -> (&V, &[V])
+    pub(crate) fn split_right<F>(
+        &self,
+        mut measure: V::Measure,
+        pred: &mut F,
+    ) -> (V::Measure, &V, &[V])
     where
         F: FnMut(&V::Measure) -> bool,
     {
         let slice = self.as_ref();
         if slice.len() == 1 {
-            (&slice[0], &[])
+            (measure, &slice[0], &[])
         } else {
             let slice = self.as_ref();
             for (index, item) in slice.iter().enumerate() {
                 measure = measure.join(&item.measure());
                 if pred(&measure) {
-                    return (&slice[index], &slice[index + 1..]);
+                    return (measure, &slice[index], &slice[index + 1..]);
                 }
             }
             let index = slice.len() - 1;
-            (&slice[index], &[])
+            (measure, &slice[index], &[])
         }
     }
 

@@ -25,9 +25,9 @@
 //! ## Examples:
 //! ```rust
 //! # use std::iter::FromIterator;
-//! use fingertrees::measure::Size;
-//! use fingertrees::monoid::Sum;
-//! use fingertrees::{FingerTree, Measured, RcRefs};
+//! use calcit_fingertrees::measure::Size;
+//! use calcit_fingertrees::monoid::Sum;
+//! use calcit_fingertrees::{FingerTree, Measured, RcRefs};
 //!
 //! // construct `Rc` based finger tree with `Size` measure
 //! let ft: FingerTree<RcRefs, _> = vec!["one", "two", "three", "four", "five"]
@@ -227,7 +227,7 @@ where
         if self.is_empty() {
             Self::new()
         } else if (&mut pred)(&self.measure()) {
-            let l = self.rec.split_left(V::Measure::unit(), &mut pred);
+            let (l, _x) = self.rec.split_left(V::Measure::unit(), &mut pred);
             FingerTree { rec: l }
         } else {
             self.clone()
@@ -242,7 +242,7 @@ where
         if self.is_empty() {
             Self::new()
         } else if (&mut pred)(&self.measure()) {
-            let (x, r) = self.rec.split_right(V::Measure::unit(), &mut pred);
+            let (_, x, r) = self.rec.split_right(V::Measure::unit(), &mut pred);
 
             FingerTree {
                 rec: r.push_left(x),

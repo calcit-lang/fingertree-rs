@@ -1,7 +1,7 @@
-use fingertrees::measure::Size;
-use fingertrees::monoid::Sum;
-use fingertrees::FingerTree;
-use fingertrees::RcRefs;
+use calcit_fingertrees::measure::Size;
+use calcit_fingertrees::monoid::Sum;
+use calcit_fingertrees::FingerTree;
+use calcit_fingertrees::RcRefs;
 
 fn main() {
     let a: FingerTree<RcRefs, _> = vec!["one", "two", "three", "four", "five"]

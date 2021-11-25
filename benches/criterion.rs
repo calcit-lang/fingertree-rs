@@ -1,6 +1,6 @@
+use calcit_fingertrees::measure::Size;
+use calcit_fingertrees::{rc, ArcRefs, FingerTree, Measured, RcRefs, Refs};
 use criterion::{criterion_group, criterion_main, Bencher, Criterion, Fun};
-use fingertrees::measure::Size;
-use fingertrees::{rc, ArcRefs, FingerTree, Measured, RcRefs, Refs};
 use std::collections::HashMap;
 
 const KB: usize = 1024;

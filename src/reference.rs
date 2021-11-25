@@ -36,8 +36,8 @@ impl<T> Ref for Arc<T> {
 /// ```
 /// use std::rc::Rc;
 /// use std::ops::Deref;
-/// use fingertrees::measure::Size;
-/// use fingertrees::{FingerTree, Measured, Ref, fingertree_define_refs};
+/// use calcit_fingertrees::measure::Size;
+/// use calcit_fingertrees::{FingerTree, Measured, Ref, fingertree_define_refs};
 ///
 /// // your custom reference type
 /// struct MyRef<T>(Rc<T>);
