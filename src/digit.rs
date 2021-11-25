@@ -37,6 +37,46 @@ where
         }
     }
 
+    pub(crate) fn split_left<F>(&self, mut measure: V::Measure, pred: &mut F) -> &[V]
+    where
+        F: FnMut(&V::Measure) -> bool,
+    {
+        let slice = self.as_ref();
+        if slice.len() == 1 {
+            &[]
+        } else {
+            let slice = self.as_ref();
+            for (index, item) in slice.iter().enumerate() {
+                measure = measure.join(&item.measure());
+                if pred(&measure) {
+                    return &slice[..index];
+                }
+            }
+            let index = slice.len() - 1;
+            &slice[..index]
+        }
+    }
+
+    pub(crate) fn split_right<F>(&self, mut measure: V::Measure, pred: &mut F) -> (&V, &[V])
+    where
+        F: FnMut(&V::Measure) -> bool,
+    {
+        let slice = self.as_ref();
+        if slice.len() == 1 {
+            (&slice[0], &[])
+        } else {
+            let slice = self.as_ref();
+            for (index, item) in slice.iter().enumerate() {
+                measure = measure.join(&item.measure());
+                if pred(&measure) {
+                    return (&slice[index], &slice[index + 1..]);
+                }
+            }
+            let index = slice.len() - 1;
+            (&slice[index], &[])
+        }
+    }
+
     pub(crate) fn find<F>(&self, mut measure: V::Measure, pred: &mut F) -> (V::Measure, &V)
     where
         F: FnMut(&V::Measure) -> bool,

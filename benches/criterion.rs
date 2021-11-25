@@ -23,6 +23,23 @@ fn bench_split(c: &mut Criterion) {
     );
 }
 
+fn bench_split_right(c: &mut Criterion) {
+    let ft: rc::FingerTree<_> = (0..1024).map(Size).collect();
+    c.bench_function_over_inputs(
+        "split_right",
+        move |b, &size| b.iter(|| ft.split_right(|m| **m > *size)),
+        SPLIT_1024,
+    );
+}
+fn bench_split_left(c: &mut Criterion) {
+    let ft: rc::FingerTree<_> = (0..1024).map(Size).collect();
+    c.bench_function_over_inputs(
+        "split_left",
+        move |b, &size| b.iter(|| ft.split_left(|m| **m > *size)),
+        SPLIT_1024,
+    );
+}
+
 fn bench_concat(c: &mut Criterion) {
     let ft: rc::FingerTree<_> = (0..1024).map(Size).collect();
     let ft_split: HashMap<_, _> = SPLIT_1024
@@ -118,6 +135,8 @@ criterion_group! {
     bench_from,
     bench_iter,
     bench_split,
+    bench_split_left,
+    bench_split_right,
 }
 
 criterion_main!(benches);

@@ -235,6 +235,68 @@ where
         }
     }
 
+    pub(crate) fn split_left<F>(&self, measure: V::Measure, pred: &mut F) -> Tree<R, V>
+    where
+        F: FnMut(&V::Measure) -> bool,
+    {
+        match self {
+            Empty => unreachable!("recursive split of finger-tree called on empty tree"),
+            Single(_) => Tree::empty(),
+            Deep(deep) => {
+                // left
+                let left_measure = measure.join(&deep.left.measure());
+                if pred(&left_measure) {
+                    let l = deep.left.split_left(measure, pred);
+                    return Tree::from(l);
+                }
+                // spine
+                let spine_measure = left_measure.join(&deep.spine.measure());
+                if pred(&spine_measure) {
+                    let (sl, sx, _) = deep.spine.split(left_measure.clone(), pred);
+                    let sx = Digit::from(&sx);
+                    let l = sx.split_left(left_measure.join(&sl.measure()), pred);
+                    return Self::deep_right(&deep.left, &sl, l);
+                }
+                // right
+                let l = deep.right.split_left(spine_measure, pred);
+                Self::deep_right(&deep.left, &deep.spine, l)
+            }
+        }
+    }
+
+    pub(crate) fn split_right<F>(
+        &self,
+        measure: V::Measure,
+        pred: &mut F,
+    ) -> (Node<R, V>, Tree<R, V>)
+    where
+        F: FnMut(&V::Measure) -> bool,
+    {
+        match self {
+            Empty => unreachable!("recursive split of finger-tree called on empty tree"),
+            Single(value) => (value.clone(), Tree::empty()),
+            Deep(deep) => {
+                // left
+                let left_measure = measure.join(&deep.left.measure());
+                if pred(&left_measure) {
+                    let (x, r) = deep.left.split_right(measure, pred);
+                    return (x.clone(), Self::deep_left(r, &deep.spine, &deep.right));
+                }
+                // spine
+                let spine_measure = left_measure.join(&deep.spine.measure());
+                if pred(&spine_measure) {
+                    let (sl, sx, sr) = deep.spine.split(left_measure.clone(), pred);
+                    let sx = Digit::from(&sx);
+                    let (x, r) = sx.split_right(left_measure.join(&sl.measure()), pred);
+                    return (x.clone(), Self::deep_left(r, &sr, &deep.right));
+                }
+                // right
+                let (x, r) = deep.right.split_right(spine_measure, pred);
+                (x.clone(), Tree::from(r))
+            }
+        }
+    }
+
     fn push_left_many(self, iter: &mut dyn Iterator<Item = Node<R, V>>) -> Self {
         match iter.next() {
             None => self,
