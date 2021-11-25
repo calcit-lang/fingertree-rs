@@ -1,13 +1,13 @@
 [package]
-name = "fingertrees"
-version = "0.2.6"
-authors = ["Pavel Aslanov <asl.pavel@gmail.com>"]
-description = "Immutable persisten finger trees"
+name = "calcit_fingertrees"
+version = "0.0.1"
+authors = ["Pavel Aslanov <asl.pavel@gmail.com>", "jiyinyiyong@gmail.com"]
+description = "(Calcit fork of )Immutable persisten `fingertrees`"
 license = "MIT"
 readme = "README.md"
-repository = "https://github.com/aslpavel/fingertree-rs"
+repository = "https://github.com/calcit-lang/fingertree-rs"
 categories = ["data-structures"]
-keywords = ["immutable", "persistent", "data-structures"]
+keywords = ["calcit", "immutable", "persistent", "data-structures"]
 edition = "2018"
 
 [badges]
