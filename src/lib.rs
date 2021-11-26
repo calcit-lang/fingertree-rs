@@ -219,7 +219,7 @@ where
         }
     }
 
-    /// reused code from split but only return the left part
+    /// partial logic from `.split(...)` with only **left** part returned
     pub fn split_left<F>(&self, mut pred: F) -> FingerTree<R, V>
     where
         F: FnMut(&V::Measure) -> bool,
@@ -234,7 +234,7 @@ where
         }
     }
 
-    /// reused code from `.split(...)`, but only returnnig the right part
+    /// partial logic from `.split(...)` with only **right** part returned
     pub fn split_right<F>(&self, mut pred: F) -> FingerTree<R, V>
     where
         F: FnMut(&V::Measure) -> bool,
@@ -242,7 +242,7 @@ where
         if self.is_empty() {
             Self::new()
         } else if (&mut pred)(&self.measure()) {
-            let (_, x, r) = self.rec.split_right(V::Measure::unit(), &mut pred);
+            let (_m, x, r) = self.rec.split_right(V::Measure::unit(), &mut pred);
 
             FingerTree {
                 rec: r.push_left(x),

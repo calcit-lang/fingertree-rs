@@ -71,9 +71,10 @@ where
         } else {
             let slice = self.as_ref();
             for (index, item) in slice.iter().enumerate() {
+                let prev_measure = measure.to_owned();
                 measure = measure.join(&item.measure());
                 if pred(&measure) {
-                    return (measure, &slice[index], &slice[index + 1..]);
+                    return (prev_measure, &slice[index], &slice[index + 1..]);
                 }
             }
             let index = slice.len() - 1;
